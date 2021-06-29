@@ -239,9 +239,6 @@
     <ClCompile Include="MicMute.cpp">
       <Filter>Source Files\modules</Filter>
     </ClCompile>
-    <ClCompile Include="LuaHK.cpp">
-      <Filter>Source Files\Lua</Filter>
-    </ClCompile>
     <ClCompile Include="LuaVK.cpp">
       <Filter>Source Files\Lua</Filter>
     </ClCompile>
@@ -267,7 +264,10 @@
       <Filter>Source Files\modules</Filter>
     </ClCompile>
     <ClCompile Include="LuaAPI.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Lua</Filter>
+    </ClCompile>
+    <ClCompile Include="Hotkey.cpp">
+      <Filter>Source Files\modules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

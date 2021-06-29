@@ -181,7 +181,7 @@
   <ItemGroup>
     <ClCompile Include="Console.cpp" />
     <ClCompile Include="LuaAPI.cpp" />
-    <ClCompile Include="LuaHK.cpp" />
+    <ClCompile Include="Hotkey.cpp" />
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="LuaMacros.cpp" />
     <ClCompile Include="Send.cpp" />

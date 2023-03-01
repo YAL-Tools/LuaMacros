@@ -38,6 +38,8 @@ namespace LuaAPI {
     X(init_keyboard_lualib)\
     X(init_hotkey_lualib)\
     X(init_micmute_lualib)\
+    X(init_clipboard_lualib)\
+    X(init_console_lualib)\
     X(init_trayicon_lualib)
 
 #define X(name) void name(lua_State* q);

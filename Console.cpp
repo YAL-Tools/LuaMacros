@@ -163,3 +163,14 @@ void init_console_window() {
     ShowWindow(LuaMacros::consoleWindow, SW_HIDE);
     #endif
 }
+
+static int show(lua_State* q) {
+    ShowWindow(LuaMacros::consoleWindow, SW_SHOW);
+    return 0;
+}
+
+void init_console_lualib(lua_State* q) {
+    lua_newtable(q);
+    luaM_rawset_str_cfunc(q, "show", show);
+    lua_setglobal(q, "console");
+}

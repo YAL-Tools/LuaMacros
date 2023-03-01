@@ -269,6 +269,9 @@
     <ClCompile Include="Hotkey.cpp">
       <Filter>Source Files\modules</Filter>
     </ClCompile>
+    <ClCompile Include="Clipboard.cpp">
+      <Filter>Source Files\modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="LuaMacros.rc">

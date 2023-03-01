@@ -35,16 +35,18 @@ static int sendKeys(lua_State* q) {
 }
 
 static int sendChars(lua_State* q) {
-	std::vector<int> keys{};
-	if (!luaM_args_to_int_vector(q, keys)) return 0;
-	auto n = keys.size();
+	std::vector<int> chars{};
+	if (!luaM_args_to_int_vector(q, chars)) return 0;
+	auto n = chars.size();
 
 	std::vector<INPUT> inputs{}; inputs.resize(n);
-	for (auto i = 0u; i < n; i++) setInputChar(&inputs[i], keys[i], false);
+	for (auto i = 0u; i < n; i++) {
+		setInputChar(&inputs[i], chars[i], false);
+	}
 	SendInput(n, inputs.data(), sizeof(INPUT));
 
 	Sleep(sleepTime);
-	for (auto i = 0u; i < keys.size(); i++) inputs[i].ki.dwFlags = KEYEVENTF_KEYUP;
+	for (auto i = 0u; i < chars.size(); i++) inputs[i].ki.dwFlags = KEYEVENTF_KEYUP|KEYEVENTF_UNICODE;
 	SendInput(n, inputs.data(), sizeof(INPUT));
 	return 0;
 }

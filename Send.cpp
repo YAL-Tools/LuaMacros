@@ -59,8 +59,14 @@ send.text = function(str, delay)
 local codes = {}
 delay = delay or 5
 for p, c in utf8.codes(str) do
-    send.char(c)
-    if (delay > 0) then sleep(delay) end
+	if (c ~= 13) then
+		if (c == 10) then
+			send.keys(VK_RETURN)
+		else
+			send.char(c)
+		end
+		if (delay > 0) then sleep(delay) end
+	end
 end
 end)lua"));
 }

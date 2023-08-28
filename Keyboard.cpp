@@ -1,12 +1,12 @@
 #include "stdafx.h"
 #include <vector>
 
-static void setInputChar(INPUT* q, WORD k, bool up = false) {
+static void setInputKey(INPUT* q, WORD k, bool up = false) {
 	q->type = INPUT_KEYBOARD;
 	q->ki.wVk = 0;
 	q->ki.wScan = k;
 	q->ki.time = 0;
-	q->ki.dwFlags = (up ? KEYEVENTF_KEYUP : 0) | KEYEVENTF_UNICODE;
+	q->ki.dwFlags = (up ? KEYEVENTF_KEYUP : 0);
 	q->ki.dwExtraInfo = NULL;
 }
 
@@ -21,7 +21,7 @@ static int keyPress(lua_State* q) {
 	auto n = keys.size();
 
 	std::vector<INPUT> inputs{}; inputs.resize(n);
-	for (auto i = 0u; i < n; i++) setInputChar(&inputs[i], keys[i], false);
+	for (auto i = 0u; i < n; i++) setInputKey(&inputs[i], keys[i], false);
 	SendInput(n, inputs.data(), sizeof(INPUT));
 	return 0;
 }
@@ -31,7 +31,7 @@ static int keyRelease(lua_State* q) {
 	auto n = keys.size();
 
 	std::vector<INPUT> inputs{}; inputs.resize(n);
-	for (auto i = 0u; i < n; i++) setInputChar(&inputs[i], keys[i], true);
+	for (auto i = 0u; i < n; i++) setInputKey(&inputs[i], keys[i], true);
 	SendInput(n, inputs.data(), sizeof(INPUT));
 	return 0;
 }

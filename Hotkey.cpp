@@ -349,6 +349,20 @@ static int remove(lua_State* q) {
 	} else lua_pushboolean(q, false);
 	return 1;
 }
+static int bind(lua_State* q) {
+	auto hk = resolve(q, 1);
+	if (hk) {
+		hk->bind();
+	}
+	return 0;
+}
+static int unbind(lua_State* q) {
+	auto hk = resolve(q, 1);
+	if (hk) {
+		hk->unbind();
+	}
+	return 0;
+}
 
 void init_hotkey_lualib(lua_State* q) {
 	HotkeyRef::init(q);
@@ -362,5 +376,7 @@ void init_hotkey_lualib(lua_State* q) {
 	lua_newtable(q);
 	luaM_rawset_str_cfunc(q, "add", add);
 	luaM_rawset_str_cfunc(q, "remove", remove);
+	luaM_rawset_str_cfunc(q, "bind", bind);
+	luaM_rawset_str_cfunc(q, "unbind", unbind);
 	lua_setglobal(q, "hotkey");
 }

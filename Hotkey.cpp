@@ -6,9 +6,15 @@ static int keyboardLayout;
 
 struct hotkey;
 struct modKey {
-	UINT key;
+	std::vector<UINT> keys{};
 	bool pressed;
 	std::vector<hotkey*> hotkeys{};
+	bool check() {
+		for (auto& kc : keys) {
+			if (!KeyCheck(kc)) return false;
+		}
+		return true;
+	}
 };
 static std::vector<modKey*> modKeys;
 
@@ -35,7 +41,7 @@ namespace HotkeyRef {
 
 struct hotkey {
 	int id = 0;
-	UINT mkKey = 0;
+	std::vector<UINT> mkKeys{};
 	modKey* mkRef = nullptr;
 	UINT mods = 0;
 	UINT key = 0;
@@ -59,11 +65,13 @@ struct hotkey {
 			}
 			trace("Failed to bind hotkey \"%s\" (id=%d, mods=0x%x, key=0x%x), hresult=0x%x%s",
 				name, id, mods, key, hr, extra);
+		} else {
+			//trace("Bound hotkey %d for vk=0x%x", id, key);
 		}
 	}
 	void unbind() {
 		if (!bound) return;
-		//trace("Unbinding hotkey %d", id);
+		//trace("Unbinding hotkey %d for vk=0x%x", id, key);
 		UnregisterHotKey(0, id);
 		bound = false;
 	}
@@ -224,7 +232,7 @@ void update_hotkeys() {
 
 	for (auto& mk : modKeys) {
 		auto wasPressed = mk->pressed;
-		mk->pressed = KeyCheck(mk->key);
+		mk->pressed = mk->check();
 		if (wasPressed != mk->pressed) {
 			for (auto hk : mk->hotkeys) hk->autoBind();
 		}
@@ -261,7 +269,25 @@ static int add(lua_State* q) {
 		hk->id = (int)hotkeys.size() + 1;
 		hotkeys.push_back(hk);
 	}
-	hk->mkKey = (UINT)luaM_rawget_str_int(q, "modkey", 0);
+	//
+	lua_pushstring(q, "modkey");
+	lua_rawget(q, -2);
+	if (lua_istable(q, -1)) {
+		auto n = lua_rawlen(q, -1);
+		for (lua_Unsigned i = 1; i <= n; i++) {
+			lua_pushinteger(q, (lua_Integer)i);
+			lua_rawget(q, -2);
+			int isnum = 0;
+			int mk = lua_tointegerx(q, -1, &isnum);
+			if (isnum) hk->mkKeys.push_back(mk);
+			lua_pop(q, 1);
+		}
+		lua_pop(q, 1);
+	} else {
+		lua_pop(q, 1);
+		auto mk = (UINT)luaM_rawget_str_int(q, "modkey", 0);
+		if (mk) hk->mkKeys.push_back(mk);
+	}
 	hk->mods = (UINT)luaM_rawget_str_int(q, "mods", 0);
 	hk->key = (UINT)luaM_rawget_str_int(q, "key", 0);
 	hk->layout = luaM_rawget_str_int(q, "layout", 0);
@@ -278,15 +304,15 @@ static int add(lua_State* q) {
 		hk->layoutRef = lr;
 	}
 
-	if (hk->mkKey != 0) {
+	if (!hk->mkKeys.empty()) {
 		modKey* mk = nullptr;
 		for (auto mki : modKeys) {
-			if (mki->key == hk->mkKey) { mk = mki; break; }
+			if (mki->keys == hk->mkKeys) { mk = mki; break; }
 		}
 		if (mk == nullptr) {
 			mk = new modKey();
-			mk->key = hk->mkKey;
-			mk->pressed = KeyCheck(mk->key);
+			mk->keys = hk->mkKeys;
+			mk->pressed = mk->check();
 			modKeys.push_back(mk);
 		}
 		hk->mkRef = mk;

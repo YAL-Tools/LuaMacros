@@ -35,6 +35,7 @@ Application can be closed by closing the aforementioned output window.
 * 2019: At some point the AutoIt script grows unbearably convoluted (lack of proper objects nor inline functions doesn't help) and I rewrite the thing to be a [slightly less cursed-looking](https://user-images.githubusercontent.com/731492/123823227-aae30280-d905-11eb-988a-1ee394faad47.png) C++ program instead.  
   At some point I make the valuable addition of a system-wide microphone mute toggle key.
 * 2021: I eventually grow tired of dealing with C++ and reorganize everything to be Lua-scriptable instead.
+* 2024: After stepping on an assorted collection of WinAPI rakes, I have decided that it's easier to learn AHK and supplement missing parts with a DLL.
 
 ## Credits
 
